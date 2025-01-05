@@ -14,6 +14,7 @@ def scrapeIngredients(url, search_query):
         wait = WebDriverWait(driver, 20)
         driver.get(url)
 
+        # Handle cookie popup
         try:
             cookie_button = wait.until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn-cookies-accept"))
@@ -23,6 +24,7 @@ def scrapeIngredients(url, search_query):
         except Exception as e:
             print(f"No cookie popup or error handling it: {e}")
 
+        # Perform search
         try:
             search_input = wait.until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "input.form-control.gtm-search-input"))
@@ -32,12 +34,14 @@ def scrapeIngredients(url, search_query):
             search_input.send_keys(Keys.RETURN)
             print(f"Searching for: {search_query}")
 
+            # Wait for search results to load
             wait.until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "div[data-block*='PLPListItem']"))
             )
             print("Search results loaded.")
 
-            time.sleep(3)
+            # Add wait time for full DOM rendering
+            time.sleep(5)
             print("Waited for DOM to load fully.")
         except Exception as e:
             print(f"Error performing search: {e}")
@@ -86,22 +90,27 @@ def scrapeIngredients(url, search_query):
                         print("No more pages available.")
                         break
                 except Exception as e:
-                    print(f"No pagination or error clicking next: {e}")
+                    #print(f"No pagination or error clicking next: {e}")
                     break
 
             except Exception as e:
                 print(f"Error scraping products: {e}")
                 break
 
-    if data:
-        first_product = pd.DataFrame([data[0]])
-        file_exists = os.path.isfile("plus_articles.csv")
+    try:
+        if data:
+            first_product = pd.DataFrame([data[0]])  # Only the first product
+            file_exists = os.path.isfile("plus_articles.csv")
 
-        first_product.to_csv(
-            "plus_articles.csv",
-            mode="a",
-            index=False,
-            header=not file_exists
-        )
-        print("First product saved to CSV:")
-        print(first_product)
+            first_product.to_csv(
+                "plus_articles.csv",
+                mode="a",
+                index=False,
+                header=not file_exists
+            )
+            print("First product saved to CSV:")
+            print(first_product)
+        else:
+            print("No data collected; nothing to save.")
+    except Exception as e:
+        print(f"Error saving to CSV: {e}")
