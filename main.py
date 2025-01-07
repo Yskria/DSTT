@@ -1,9 +1,11 @@
-from SummariseData import display_recipe_information, save_recipe_totals_to_csv
+from SummariseData import display_recipe_information, save_recipe_totals_to_csv, runScrapers
 import pandas as pd
 
 file_path = 'recipes_with_ingredients_and_prices_combined.csv'
 df = pd.read_csv(file_path)
 output_file = 'recipes_with_total_price.csv'
+
+#runScrapers()
 
 save_recipe_totals_to_csv(df, output_file)
 

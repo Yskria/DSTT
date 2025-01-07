@@ -36,14 +36,6 @@ def display_recipe_information(df):
 
 def save_recipe_totals_to_csv(df, output_file):
     
-    # scrape_recipes("https://www.plus.nl/recepten/avondeten")
-    
-    # combine_data(
-    #     recipe_file="recipes_with_ingredients_and_prices.csv",
-    #     plus_url="https://www.plus.nl",
-    #     output_file="recipes_with_ingredients_and_prices_combined.csv"
-    # )
-    
     ingredient_columns = [col for col in df.columns if col.startswith('Ingredient')]
     price_columns = [col for col in df.columns if col.startswith('Price')]
 
@@ -68,3 +60,12 @@ def save_recipe_totals_to_csv(df, output_file):
     output_df = pd.DataFrame(recipes_total_price)
     output_df.to_csv(output_file, index=False)
     print(f"\nRecipes with total prices have been saved to {output_file}")
+
+def runScrapers():
+    scrape_recipes("https://www.plus.nl/recepten/avondeten")
+    
+    combine_data(
+        recipe_file="recipes_with_ingredients_and_prices.csv",
+        plus_url="https://www.plus.nl",
+        output_file="recipes_with_ingredients_and_prices_combined.csv"
+    )
