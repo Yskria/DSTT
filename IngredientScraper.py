@@ -14,7 +14,6 @@ def scrapeIngredients(url, search_query):
         wait = WebDriverWait(driver, 20)
         driver.get(url)
 
-        # Handle cookie popup
         try:
             cookie_button = wait.until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn-cookies-accept"))
@@ -24,7 +23,6 @@ def scrapeIngredients(url, search_query):
         except Exception as e:
             print(f"No cookie popup or error handling it: {e}")
 
-        # Perform search
         try:
             search_input = wait.until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "input.form-control.gtm-search-input"))
@@ -34,13 +32,11 @@ def scrapeIngredients(url, search_query):
             search_input.send_keys(Keys.RETURN)
             print(f"Searching for: {search_query}")
 
-            # Wait for search results to load
             wait.until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, "div[data-block*='PLPListItem']"))
             )
             print("Search results loaded.")
 
-            # Add wait time for full DOM rendering
             time.sleep(5)
             print("Waited for DOM to load fully.")
         except Exception as e:
@@ -90,7 +86,7 @@ def scrapeIngredients(url, search_query):
                         print("No more pages available.")
                         break
                 except Exception as e:
-                    #print(f"No pagination or error clicking next: {e}")
+                    print(f"No pagination or error clicking next: {e}")
                     break
 
             except Exception as e:
